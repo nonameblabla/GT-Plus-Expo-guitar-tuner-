@@ -90,3 +90,133 @@ export const GUITAR_TUNINGS: Record<'six'|'seven'|'eight', {
     { label: 'Drop A8',      strings: ['A1','E2','A2','D3','G3','B3','E4','A4'] },
   ],
 };
+
+export const GUITAR_IMG: Record<'six'|'seven'|'eight', Record<string, any>> = {
+  six: {
+    base: require('../assets/guitar/6strings/guitar.jpg'),
+    E2:   require('../assets/guitar/6strings/guitar6.jpg'),
+    A2:   require('../assets/guitar/6strings/guitar5.jpg'),
+    D3:   require('../assets/guitar/6strings/guitar4.jpg'),
+    G3:   require('../assets/guitar/6strings/guitar3.jpg'),
+    B3:   require('../assets/guitar/6strings/guitar2.jpg'),
+    E4:   require('../assets/guitar/6strings/guitar1.jpg'),
+
+    D2:   require('../assets/guitar/6strings/guitar6.jpg'),
+    A3:   require('../assets/guitar/6strings/guitar2.jpg'),
+    D4:   require('../assets/guitar/6strings/guitar1.jpg'),
+    G2:   require('../assets/guitar/6strings/guitar5.jpg'),
+
+    "D#2":   require('../assets/guitar/6strings/guitar6.jpg'),
+    "G#2":   require('../assets/guitar/6strings/guitar5.jpg'),
+    "C#3":   require('../assets/guitar/6strings/guitar4.jpg'),
+    "F#3":   require('../assets/guitar/6strings/guitar3.jpg'),
+    "A#3":   require('../assets/guitar/6strings/guitar2.jpg'),
+    "D#4":   require('../assets/guitar/6strings/guitar1.jpg'),
+
+  },
+  seven: {
+    base: require('../assets/guitar/7strings/7string_guitar_base.jpg'),
+    B1:   require('../assets/guitar/7strings/7string_guitar_7.jpg'),
+    E2:   require('../assets/guitar/7strings/7string_guitar_6.jpg'),
+    A2:   require('../assets/guitar/7strings/7string_guitar_5.jpg'),
+    D3:   require('../assets/guitar/7strings/7string_guitar_4.jpg'),
+    G3:   require('../assets/guitar/7strings/7string_guitar_3.jpg'),
+    B3:   require('../assets/guitar/7strings/7string_guitar_2.jpg'),
+    E4:   require('../assets/guitar/7strings/7string_guitar_1.jpg'),
+
+    A1:   require('../assets/guitar/7strings/7string_guitar_7.jpg'),
+    D2:   require('../assets/guitar/7strings/7string_guitar_6.jpg'),
+    G2:   require('../assets/guitar/7strings/7string_guitar_5.jpg'),
+    D4:   require('../assets/guitar/7strings/7string_guitar_1.jpg'),
+
+    "A#1":   require('../assets/guitar/7strings/7string_guitar_7.jpg'),
+    "D#2":   require('../assets/guitar/7strings/7string_guitar_6.jpg'),
+    "G#2":   require('../assets/guitar/7strings/7string_guitar_5.jpg'),
+    "C#3":   require('../assets/guitar/7strings/7string_guitar_4.jpg'),
+    "F#3":   require('../assets/guitar/7strings/7string_guitar_3.jpg'),
+    "A#3":   require('../assets/guitar/7strings/7string_guitar_2.jpg'),
+    "D#4":   require('../assets/guitar/7strings/7string_guitar_1.jpg'),
+    E1:   require('../assets/guitar/7strings/7string_guitar_7.jpg'),
+
+
+  },
+  eight: {
+    base: require('../assets/guitar/8strings/8string_guitar_base.jpg'),
+    "F#1": require('../assets/guitar/8strings/8string_guitar_8.jpg'),
+    B1:   require('../assets/guitar/8strings/8string_guitar_7.jpg'),
+    E2:   require('../assets/guitar/8strings/8string_guitar_6.jpg'),
+    A2:   require('../assets/guitar/8strings/8string_guitar_5.jpg'),
+    D3:   require('../assets/guitar/8strings/8string_guitar_4.jpg'),
+    G3:   require('../assets/guitar/8strings/8string_guitar_3.jpg'),
+    B3:   require('../assets/guitar/8strings/8string_guitar_2.jpg'),
+    E4:   require('../assets/guitar/8strings/8string_guitar_1.jpg'),
+
+    E1: require('../assets/guitar/8strings/8string_guitar_8.jpg'),
+
+
+  },
+};
+
+export const DARK_GUITAR_IMG: Record<'six'|'seven'|'eight', Record<string, any>> = {
+  six: {
+    base: require('../assets/dark_guitar/6strings/dark_guitar.jpg'),
+    E2:   require('../assets/dark_guitar/6strings/dark_guitar1.jpg'),
+    A2:   require('../assets/dark_guitar/6strings/dark_guitar2.jpg'),
+    D3:   require('../assets/dark_guitar/6strings/dark_guitar3.jpg'),
+    G3:   require('../assets/dark_guitar/6strings/dark_guitar4.jpg'),
+    B3:   require('../assets/dark_guitar/6strings/dark_guitar5.jpg'),
+    E4:   require('../assets/dark_guitar/6strings/dark_guitar6.jpg'),
+
+    D2:   require('../assets/dark_guitar/6strings/dark_guitar1.jpg'),
+    A3:   require('../assets/dark_guitar/6strings/dark_guitar5.jpg'),
+    D4:   require('../assets/dark_guitar/6strings/dark_guitar6.jpg'),
+    G2:   require('../assets/dark_guitar/6strings/dark_guitar2.jpg'),
+
+    "D#2":   require('../assets/dark_guitar/6strings/dark_guitar1.jpg'),
+    "G#2":   require('../assets/dark_guitar/6strings/dark_guitar2.jpg'),
+    "C#3":   require('../assets/dark_guitar/6strings/dark_guitar3.jpg'),
+    "F#3":   require('../assets/dark_guitar/6strings/dark_guitar4.jpg'),
+    "A#3":   require('../assets/dark_guitar/6strings/dark_guitar5.jpg'),
+    "D#4":   require('../assets/dark_guitar/6strings/dark_guitar6.jpg'),
+
+  },
+  seven: {
+    base: require('../assets/dark_guitar/7strings/7string_guitar_base.jpg'),
+    B1:   require('../assets/dark_guitar/7strings/7string_guitar_7.jpg'),
+    E2:   require('../assets/dark_guitar/7strings/7string_guitar_6.jpg'),
+    A2:   require('../assets/dark_guitar/7strings/7string_guitar_5.jpg'),
+    D3:   require('../assets/dark_guitar/7strings/7string_guitar_4.jpg'),
+    G3:   require('../assets/dark_guitar/7strings/7string_guitar_3.jpg'),
+    B3:   require('../assets/dark_guitar/7strings/7string_guitar_2.jpg'),
+    E4:   require('../assets/dark_guitar/7strings/7string_guitar_1.jpg'),
+
+    A1:   require('../assets/dark_guitar/7strings/7string_guitar_7.jpg'),
+    D2:   require('../assets/dark_guitar/7strings/7string_guitar_6.jpg'),
+    G2:   require('../assets/dark_guitar/7strings/7string_guitar_5.jpg'),
+    D4:   require('../assets/dark_guitar/7strings/7string_guitar_1.jpg'),
+
+    "A#1":   require('../assets/dark_guitar/7strings/7string_guitar_7.jpg'),
+    "D#2":   require('../assets/dark_guitar/7strings/7string_guitar_6.jpg'),
+    "G#2":   require('../assets/dark_guitar/7strings/7string_guitar_5.jpg'),
+    "C#3":   require('../assets/dark_guitar/7strings/7string_guitar_4.jpg'),
+    "F#3":   require('../assets/dark_guitar/7strings/7string_guitar_3.jpg'),
+    "A#3":   require('../assets/dark_guitar/7strings/7string_guitar_2.jpg'),
+    "D#4":   require('../assets/dark_guitar/7strings/7string_guitar_1.jpg'),
+    E1:   require('../assets/dark_guitar/7strings/7string_guitar_7.jpg'),
+
+  },
+  eight: {
+    base: require('../assets/dark_guitar/8strings/8string_guitar_base.jpg'),
+    "F#1": require('../assets/dark_guitar/8strings/8string_guitar_8.jpg'),
+    B1:   require('../assets/dark_guitar/8strings/8string_guitar_7.jpg'),
+    E2:   require('../assets/dark_guitar/8strings/8string_guitar_6.jpg'),
+    A2:   require('../assets/dark_guitar/8strings/8string_guitar_5.jpg'),
+    D3:   require('../assets/dark_guitar/8strings/8string_guitar_4.jpg'),
+    G3:   require('../assets/dark_guitar/8strings/8string_guitar_3.jpg'),
+    B3:   require('../assets/dark_guitar/8strings/8string_guitar_2.jpg'),
+    E4:   require('../assets/dark_guitar/8strings/8string_guitar_1.jpg'),
+
+    E1: require('../assets/dark_guitar/8strings/8string_guitar_8.jpg'),
+
+  },
+};

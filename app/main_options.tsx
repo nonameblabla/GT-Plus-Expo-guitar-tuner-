@@ -1,25 +1,36 @@
-// MainOptions.tsx
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Switch, ActivityIndicator } from 'react-native';
+import React, { useContext, useState, useCallback, useEffect, version } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Switch,
+  ActivityIndicator,
+  ScrollView,
+  RefreshControl,
+  Alert,
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { SettingsContext } from './SettingsContext';
 import { GUITAR_TUNINGS } from './constants';
 import type { NoteKey } from './constants';
+import Constants from 'expo-constants';
 
-const noteLangDescriptions = {
-  uk: 'До Ре Мі Фа Соль Ля Сі',
-  en: 'C D E F G A B',
-};
+// Отримуємо версію застосунку з expo-constants
+const appVersionFromExpo = Constants.expoConfig?.version || 'невідомо';
+
+type GuitarType = typeof GUITAR_TUNINGS extends Record<infer K, any>
+  ? K extends string
+    ? K
+    : never
+  : never;
+
+type TuningOption = { label: string; strings: NoteKey[] };
 
 const guitarTypeOptions = [
   { label: '6-струнна', value: 'six' as const },
   { label: '7-струнна', value: 'seven' as const },
   { label: '8-струнна', value: 'eight' as const },
 ];
-
-type GuitarType = typeof guitarTypeOptions[number]['value'];
-
-type TuningOption = { label: string; strings: NoteKey[] };
 
 export default function MainOptions() {
   const {
@@ -36,16 +47,34 @@ export default function MainOptions() {
     isReady,
   } = useContext(SettingsContext);
 
-  // Створюємо список стріїв для поточного типу гітари
+  const [appVersion, setAppVersion] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAppVersion(appVersionFromExpo);
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setAppVersion(appVersionFromExpo);
+    Alert.alert('Версія застосунку', `Поточна версія: ${appVersionFromExpo}`);
+    setTimeout(() => setRefreshing(false), 800);
+  }, []);
+
   const tuningList = GUITAR_TUNINGS[guitarType as GuitarType] as TuningOption[];
-  // Створюємо опції для Picker: label і value (тут значення — це ярлик строю)
-  const tuningOptions = tuningList.map((opt: TuningOption) => ({
-    label: opt.label,
-    value: opt.label,
-  }));
+  const tuningOptions = tuningList.map(opt => ({ label: opt.label, value: opt.label }));
 
   return (
-    <View style={[styles.container, darkMode && styles.darkContainer]}>
+    <ScrollView
+      contentContainerStyle={[styles.container, darkMode && styles.darkContainer]}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={darkMode ? '#fff' : '#000'}
+        />
+      }
+    >
       {!isReady && (
         <ActivityIndicator
           size="small"
@@ -54,11 +83,12 @@ export default function MainOptions() {
         />
       )}
 
-      <View style={[styles.block, darkMode && styles.darkBlock]}>
-        <Text style={[styles.title, darkMode && styles.darkText]}>Налаштування застосунку</Text>
+      <View style={[styles.blockTitle, darkMode && styles.darkBlock]}>
+        <Text style={[styles.title, darkMode && styles.darkText]}>
+          Налаштування застосунку
+        </Text>
       </View>
 
-      {/* Темний режим */}
       <View style={[styles.option, darkMode && styles.darkBlock]}>
         <Text style={[styles.label, darkMode && styles.darkText]}>Темний режим</Text>
         <Switch
@@ -70,7 +100,6 @@ export default function MainOptions() {
         />
       </View>
 
-      {/* Мова позначень */}
       <View style={[styles.option, darkMode && styles.darkBlock]}>
         <Text style={[styles.label, darkMode && styles.darkText]}>Мова позначень нот</Text>
         <View style={[styles.pickerWrapper, darkMode && styles.darkPickerWrapper]}>
@@ -87,7 +116,6 @@ export default function MainOptions() {
         </View>
       </View>
 
-      {/* Стрій гітари */}
       <View style={[styles.option, darkMode && styles.darkBlock]}>
         <Text style={[styles.label, darkMode && styles.darkText]}>Стрій гітари</Text>
         <View style={[styles.pickerWrapper, darkMode && styles.darkPickerWrapper]}>
@@ -105,7 +133,6 @@ export default function MainOptions() {
         </View>
       </View>
 
-      {/* Режим руки */}
       <View style={[styles.option, darkMode && styles.darkBlock]}>
         <Text style={[styles.label, darkMode && styles.darkText]}>Режим руки</Text>
         <View style={[styles.pickerWrapper, darkMode && styles.darkPickerWrapper]}>
@@ -122,13 +149,12 @@ export default function MainOptions() {
         </View>
       </View>
 
-      {/* Тип гітари */}
       <View style={[styles.option, darkMode && styles.darkBlock]}>
         <Text style={[styles.label, darkMode && styles.darkText]}>Тип гітари</Text>
         <View style={[styles.pickerWrapper, darkMode && styles.darkPickerWrapper]}>
           <Picker
             selectedValue={guitarType}
-            onValueChange={(value) => setGuitarType(value as GuitarType)}
+            onValueChange={value => setGuitarType(value as GuitarType)}
             enabled={isReady}
             style={[styles.picker, darkMode && styles.darkPicker]}
             dropdownIconColor={darkMode ? '#fff' : '#000'}
@@ -139,21 +165,54 @@ export default function MainOptions() {
           </Picker>
         </View>
       </View>
-    </View>
+
+      <View style={[styles.version, darkMode && styles.darkVersion]}>
+        <Text style={[styles.labelV, darkMode && styles.darkText]}>Версія застосунку</Text>
+        <Text style={[styles.value, darkMode && styles.darkText]}>{appVersion}</Text>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, backgroundColor: '#f5f5f5' },
+  container: { flexGrow: 1, padding: 10, backgroundColor: '#f5f5f5' },
   darkContainer: { backgroundColor: '#121212' },
   loading: { marginBottom: 10 },
   block: { marginBottom: 20, padding: 10, backgroundColor: '#e0e0e0', borderRadius: 5 },
   darkBlock: { backgroundColor: '#1e1e1e' },
   title: { fontSize: 18, color: '#333' },
-  darkText: { color: '#ffffff' },
-  option: { flexDirection: 'column', alignItems: 'flex-start', padding: 12, backgroundColor: '#ffffff', borderRadius: 5, marginBottom: 10 },
+  blockTitle: { marginBottom: 20, padding: 10, backgroundColor: '#fff', borderRadius: 5, alignItems:"center" },
+  darkText: { color: '#fff' },
+  option: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    padding: 12,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  version:{
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    marginBottom: 10,
+    top:"3%"
+  },
+  darkVersion:{
+    backgroundColor: '#1e1e1e'
+  },
   label: { fontSize: 16, color: '#333', marginBottom: 6 },
-  pickerWrapper: { borderWidth: 1, borderRadius: 5, overflow: 'hidden', borderColor: '#ccc', width: '100%' },
+  value: { fontSize: 12, color: '#333' },
+  labelV: { fontSize: 12 },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderRadius: 5,
+    overflow: 'hidden',
+    borderColor: '#ccc',
+    width: '100%',
+  },
   darkPickerWrapper: { borderColor: '#555' },
   picker: { height: 48, width: '100%', color: '#000', backgroundColor: '#fff' },
   darkPicker: { color: '#fff', backgroundColor: '#2a2a2a' },

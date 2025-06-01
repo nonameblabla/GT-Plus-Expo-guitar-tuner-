@@ -28,7 +28,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="expotuner"/>
         <data android:scheme="com.gra1488.expotuner"/>
-        <data android:scheme="exp+expo-tuner"/>
+        <data android:scheme="exp+gt-plus"/>
       </intent-filter>
     </activity>
   </application>

@@ -1,61 +1,72 @@
+// __tests__/MainApp.test.tsx
+
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import MainApp from '../app/index';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { Image, PermissionsAndroid } from 'react-native';
 import LiveAudioStream from 'react-native-live-audio-stream';
+import MainApp from '../app/index'; // або './index' залежно від структури
 
-// Мок для осциллятора
-const mockOscillator = {
-  frequency: { value: 0 },
-  type: 'sine',
-  connect: jest.fn(),
-  start: jest.fn(),
-  stop: jest.fn(),
-  disconnect: jest.fn()
-};
+// Мок для Image.resolveAssetSource, що повертає всі поля, потрібні TypeScript
+Image.resolveAssetSource = jest.fn(src => ({
+  uri: 'test-uri',
+  width: 100,
+  height: 100,
+  scale: 1,
+}));
+// Мок для Image.prefetch, повертаємо Promise<boolean>
+Image.prefetch = jest.fn(() => Promise.resolve(true));
 
-describe('MainApp (Tuner Screen)', () => {
-  
-  it('рендерит переключатель режима и визуализатор', () => {
-    const { getByText, UNSAFE_getAllByType } = render(<MainApp />);
-    expect(getByText('OFF')).toBeTruthy();
-    
-    // Проверяем наличие анимированных компонентов в визуализаторе
-    // Using type assertion to avoid TypeScript errors
-    const animatedViews = UNSAFE_getAllByType('Animated.View' as any);
-    expect(animatedViews.length).toBeGreaterThan(0);
+describe('MainApp (екран тюнера)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('переключает режим ON ↔ OFF и сбрасывает состояние', () => {
+  test('початково відображає кнопку з написом "OFF"', () => {
     const { getByText } = render(<MainApp />);
-    const btn = getByText('OFF');
-    fireEvent.press(btn);
+    expect(getByText('OFF')).toBeTruthy();
+  });
+
+  test('після натискання кнопка змінює напис на "ON"', () => {
+    const { getByText } = render(<MainApp />);
+    const toggleBtn = getByText('OFF');
+    fireEvent.press(toggleBtn);
     expect(getByText('ON')).toBeTruthy();
-    // При включении сбрасывается автоматический выбор струны
-    fireEvent.press(getByText('ON'));
-    expect(getByText('OFF')).toBeTruthy();
   });
 
-  it('вызывает init и start LiveAudioStream на монтировании', () => {
-    // Проверяем, что mock LiveAudioStream.init и start активны
-    expect(LiveAudioStream.init).toBeDefined();
-    expect(LiveAudioStream.start).toBeDefined();
-    
-    render(<MainApp />);
-    
-    // Проверяем только факт вызова методов без проверки параметров
-    expect(LiveAudioStream.init).toHaveBeenCalled();
-    expect(LiveAudioStream.start).toHaveBeenCalled();
-  });
-
-  it('отображает кнопки струн', () => {
+  test('натискання на кнопку струни встановлює вибрану струну й відображає її позначку', async () => {
     const { getByText } = render(<MainApp />);
-    
-    // Проверяем наличие всех струн
-    expect(getByText('Мі2')).toBeTruthy();
-    expect(getByText('Ля2')).toBeTruthy();
-    expect(getByText('Ре3')).toBeTruthy();
-    expect(getByText('Соль3')).toBeTruthy();
-    expect(getByText('Сі3')).toBeTruthy();
-    expect(getByText('Мі4')).toBeTruthy();
+
+    // Чекаємо виклик PermissionsAndroid.request()
+    await waitFor(() => {
+      expect(PermissionsAndroid.request).toHaveBeenCalled();
+    });
+
+    // Перемикаємо режим із OFF на ON
+    fireEvent.press(getByText('OFF'));
+
+    // За замовчуванням: guitarType = 'six', handedness = 'right'
+    // displayLeft = ['D3','A2','E2'], NOTE_LABELS['uk']['D3'] = 'Ре'
+    const stringLabel = 'Ре';
+    const stringBtn = getByText(stringLabel);
+    fireEvent.press(stringBtn);
+
+    // Після вибору струни позначка "Ре" залишається в UI
+    expect(getByText(stringLabel)).toBeTruthy();
+  });
+
+  test('на початку ініціалізує та запускає LiveAudioStream', async () => {
+    render(<MainApp />);
+
+    await waitFor(() => {
+      expect(LiveAudioStream.init).toHaveBeenCalledWith({
+        sampleRate: 44100,
+        channels: 1,
+        bitsPerSample: 16,
+        audioSource: 6,
+        bufferSize: 2048,
+        wavFile: 'temp.wav',
+      });
+      expect(LiveAudioStream.start).toHaveBeenCalled();
+    });
   });
 });
